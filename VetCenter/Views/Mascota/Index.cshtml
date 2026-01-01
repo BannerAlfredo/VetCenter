@@ -1,0 +1,238 @@
+﻿@model X.PagedList.IPagedList<VetCenter.Models.Mascota>
+@{
+    ViewData["Title"] = "Mascotas";
+    Layout = "_PanelLayout";
+}
+
+<style>
+    .vc-pager {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 18px;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    }
+
+    .vc-pager-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        color: #000;
+        font-size: 15px;
+        text-decoration: none;
+    }
+
+        .vc-pager-btn:hover {
+            color: #000;
+        }
+
+        .vc-pager-btn.disabled,
+        .vc-pager-btn[aria-disabled="true"] {
+            color: #adb5bd;
+            pointer-events: none;
+        }
+
+    .vc-pager-current {
+        background-color: #d4edda;
+        color: #198754;
+        font-weight: 600;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        border-radius: 50%;
+        display: inline-block;
+        font-size: 16px;
+    }
+
+    .vc-pager-container {
+        background-color: #fff !important;
+    }
+
+
+    .table td,
+    .table th {
+        padding-top: 18px;
+        padding-bottom: 18px;
+        line-height: 1.8;
+        vertical-align: middle;
+        text-align: center;
+        color: #000 !important;
+        font-size: 16px;
+    }
+
+    .table-responsive {
+        margin-bottom: 0;
+        background-color: #fff;
+    }
+
+    th i.fa-arrow-up,
+    th i.fa-arrow-down {
+        font-size: 16px;
+        color: #6c757d;
+        vertical-align: middle;
+        margin-left: 6px;
+    }
+
+    /* 🔽 fuerza fondo blanco en todo el bloque */
+    .card, .card-header, .card-body {
+        background-color: #fff !important;
+    }
+</style>
+
+<div class="card bg-white border-0">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h2 class="mb-0 fw-bold" style="color: #0d1b2a; font-size: 28px; margin-left: 32px;">
+            Mascotas
+        </h2>
+        <a asp-action="Nuevo" class="btn" style="background-color: #041c3e; color: #fff; margin-right: 32px;">
+            Agregar Mascota
+        </a>
+    </div>
+
+    <div class="card-body p-0 bg-white">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead style="background-color: #fff; color: #000; border-bottom: 1px solid #dee2e6;">
+                    <tr>
+                        <th class="text-center fw-bold">
+                            ID
+                            <i class="fa-solid fa-arrow-up text-secondary"></i>
+                            <i class="fa-solid fa-arrow-down text-secondary"></i>
+                        </th>
+                        <th class="text-center fw-bold">
+                            Nombre
+                            <i class="fa-solid fa-arrow-up text-secondary"></i>
+                            <i class="fa-solid fa-arrow-down text-secondary"></i>
+                        </th>
+                        <th class="text-center fw-bold">
+                            Tipo
+                            <i class="fa-solid fa-arrow-up text-secondary"></i>
+                            <i class="fa-solid fa-arrow-down text-secondary"></i>
+                        </th>
+                        <th class="text-center fw-bold">
+                            Raza
+                            <i class="fa-solid fa-arrow-up text-secondary"></i>
+                            <i class="fa-solid fa-arrow-down text-secondary"></i>
+                        </th>
+                        <th class="text-center fw-bold">
+                            Edad
+                            <i class="fa-solid fa-arrow-up text-secondary"></i>
+                            <i class="fa-solid fa-arrow-down text-secondary"></i>
+                        </th>
+                        <th class="text-center fw-bold">
+                            Dueño
+                            <i class="fa-solid fa-arrow-up text-secondary"></i>
+                            <i class="fa-solid fa-arrow-down text-secondary"></i>
+                        </th>
+                        <th class="text-center fw-bold">Estado</th>
+                        <th class="text-center fw-bold" style="width: 160px;">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">@item.Id</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.Tipo</td>
+                            <td>@item.Raza</td>
+                            <td>@item.Edad <span class="small" style="color: #000;">años</span></td>
+                            <td>
+                                @(item.Cliente != null
+                                                            ? item.Cliente.Nombre + " " + item.Cliente.Apellido
+                                                            : "Sin dueño")
+                        </td>
+                        <td>
+                            @if (item.Estado)
+                                {
+                                    <span class="badge bg-success text-white border border-success px-2 py-1 rounded-pill">Activa</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger text-white border border-danger px-2 py-1 rounded-pill">Cancelada</span>
+                                }
+
+                            <td class="text-center">
+                                <a asp-action="Detalles" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary mx-1" title="Ver Detalle">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                <a asp-action="Editar" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary mx-1" title="Editar">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <a asp-action="Eliminar" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger mx-1"
+                                   onclick="return confirm('¿Estás seguro de eliminar esta mascota?')" title="Eliminar">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- 🔽 Paginación institucional completa -->
+            <div style="margin-top: 0; background-color: #fff; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">
+                <nav class="vc-pager py-3">
+                    @if (Model.PageNumber > 1)
+                    {
+                        <a class="vc-pager-btn" asp-action="Index" asp-route-pageNumber="1">
+                            <i class="fa-solid fa-angles-left"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="vc-pager-btn disabled" aria-disabled="true">
+                            <i class="fa-solid fa-angles-left"></i>
+                        </span>
+                    }
+
+                    @if (Model.HasPreviousPage)
+                    {
+                        <a class="vc-pager-btn" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)">
+                            <i class="fa-solid fa-angle-left"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="vc-pager-btn disabled" aria-disabled="true">
+                            <i class="fa-solid fa-angle-left"></i>
+                        </span>
+                    }
+
+                    <span class="vc-pager-current">@Model.PageNumber</span>
+
+                    @if (Model.HasNextPage)
+                    {
+                        <a class="vc-pager-btn" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)">
+                            <i class="fa-solid fa-angle-right"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="vc-pager-btn disabled" aria-disabled="true">
+                            <i class="fa-solid fa-angle-right"></i>
+                        </span>
+                    }
+
+                    @if (Model.PageNumber < Model.PageCount)
+                    {
+                        <a class="vc-pager-btn" asp-action="Index" asp-route-pageNumber="@Model.PageCount">
+                            <i class="fa-solid fa-angles-right"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="vc-pager-btn disabled" aria-disabled="true">
+                            <i class="fa-solid fa-angles-right"></i>
+                        </span>
+                    }
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

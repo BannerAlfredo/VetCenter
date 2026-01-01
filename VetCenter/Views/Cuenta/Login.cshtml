@@ -1,0 +1,147 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - VetCenter</title>
+
+    <!-- Bootstrap y Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to right, #0d6efd, #198754);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .login-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .login-image {
+            flex: 0 0 60%;
+            height: 100%;
+        }
+
+            .login-image img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+        .login-form {
+            flex: 0 0 40%;
+            background-color: #8dccfe;
+            color: white;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+            .login-form h2 {
+                font-weight: bold;
+                margin-bottom: 1rem;
+            }
+
+            .login-form .form-group {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .login-form .form-label {
+                display: block;
+                text-align: left;
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+                color: white;
+                font-size: 1rem;
+            }
+
+            .login-form .form-control {
+                height: 55px;
+                width: 100%;
+                font-size: 1rem;
+                font-weight: 500;
+                border-radius: 0.5rem;
+                padding: 0 1rem;
+            }
+
+
+            .login-form .btn-success {
+                height: 55px;
+                width: 80%;
+                margin: 0 auto;
+                font-size: 1rem;
+                font-weight: bold;
+                border-radius: 0.5rem;
+            }
+
+
+
+
+        .paw-icon {
+            font-size: 3rem;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Imagen veterinaria amplia -->
+        <div class="login-image d-none d-md-block">
+            <img src="@Url.Content("~/images/image6.jpg")" alt="Vet Clinic" />
+        </div>
+
+        <!-- Formulario de acceso -->
+        <div class="login-form">
+            <div class="text-center mb-4">
+                <img src="@Url.Content("~/images/image5.png")" alt="Logo Vet Center" style="height: 90px; margin-bottom: 1rem;" />
+                <h2>INICIAR SESIÓN</h2>
+            </div>
+
+          
+
+            <form action="/Cuenta/Login" method="post">
+                <div class="form-group mb-4" style="width: 80%; margin: 0 auto;">
+                    <label class="form-label text-white" style="display: block; text-align: left;">E-MAIL</label>
+                    <input type="email" name="email" class="form-control" required />
+                </div>
+                <div class="form-group mb-4" style="width: 80%; margin: 0 auto;">
+                    <label class="form-label text-white" style="display: block; text-align: left;">CONTRASEÑA</label>
+                    <input type="password" name="password" class="form-control" required />
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success" style="width: 80%; height: 55px;">INGRESAR</button>
+                </div>
+            </form>
+
+
+
+            @if (ViewBag.Error != null)
+            {
+                <p class="text-danger mt-3" style="font-weight: 500; text-align: left; width: 80%; margin: 0 auto;">@ViewBag.Error</p>
+            }
+
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

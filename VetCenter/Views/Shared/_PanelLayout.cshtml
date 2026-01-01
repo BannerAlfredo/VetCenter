@@ -1,0 +1,232 @@
+﻿@{
+    var usuario = Context.Session.GetString("usuario");
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>VetCenter - Panel Administrativo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #fff;
+            color: #000;
+        }
+
+        .vc-container {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            grid-template-rows: 60px 1fr;
+            grid-template-areas:
+                "topbar topbar"
+                "sidebar content";
+            height: 100vh;
+        }
+
+        .vc-sidebar {
+            grid-area: sidebar;
+            background-color: #bbdbf2;
+            color: #0d1b2a;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* ✅ empuja cerrar sesión abajo */
+            position: relative;
+            z-index: 1;
+        }
+
+            .vc-sidebar h4 {
+                margin-bottom: 30px;
+                font-weight: bold;
+                font-size: 1.2rem;
+            }
+
+            .vc-sidebar nav {
+                display: flex;
+                flex-direction: column;
+                gap: 12px; /* ✅ espacio entre ítems */
+            }
+
+            .vc-sidebar .nav-link {
+                color: #2d498f !important;
+                font-weight: 500;
+                font-size: 15px;
+            }
+
+                .vc-sidebar .nav-link:hover {
+                    color: #0dcaf0 !important;
+                }
+
+                .vc-sidebar .nav-link i {
+                    margin-right: 10px;
+                }
+
+            .vc-sidebar.collapsed {
+                width: 70px;
+            }
+
+                .vc-sidebar.collapsed h4 {
+                    font-size: 0;
+                    margin: 0;
+                }
+
+                .vc-sidebar.collapsed .nav-link {
+                    font-size: 0;
+                    padding-left: 0;
+                }
+
+                    .vc-sidebar.collapsed .nav-link i {
+                        font-size: 1.2rem;
+                        margin-right: 0;
+                    }
+
+        .vc-topbar {
+            grid-area: topbar;
+            background-color: #bbdbf2;
+            color: #2d498f;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            position: relative;
+            z-index: 10;
+        }
+
+            .vc-topbar .vc-left span,
+            .vc-topbar .text-white-50 {
+                color: #2d498f !important;
+                font-weight: 500;
+            }
+
+        .vc-content {
+            grid-area: content;
+            overflow-y: auto;
+            padding: 30px;
+            background-color: #fff;
+            color: #000;
+        }
+
+        #vc-toggle {
+            background: none;
+            border: none;
+            color: #2d498f;
+            font-size: 1.2rem;
+        }
+
+            #vc-toggle:hover {
+                color: #0d1b2a;
+            }
+
+        .vc-container.collapsed {
+            grid-template-columns: 70px 1fr;
+        }
+
+
+        .vc-sidebar.collapsed .vc-logo {
+            display: none;
+        }
+
+        .vc-sidebar.collapsed nav {
+            margin-top: 0 !important; /* ✅ íconos suben arriba */
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="vc-container" id="vc-container">
+        <!-- Barra superior -->
+        <div class="vc-topbar">
+            <div class="vc-left">
+                <button id="vc-toggle"><i class="fa-solid fa-bars"></i></button>
+                <span class="fst-italic fw-semibold" style="color: #2d498f; margin-left: 10px;">
+                    Bienvenido, Administrador
+                </span>
+
+
+            </div>
+            <!-- ✅ Correo + logo alineados -->
+            <div class="d-flex align-items-center gap-2">
+                <span style="color: #2d498f; font-weight: 500;">
+                    @usuario
+                </span>
+                <a href="@Url.Action("Perfil", "Usuario")" title="Configurar Perfil" class="text-decoration-none">
+                    <img src="~/images/image5.png" alt="Logo VetCenter"
+                         style="height: 32px; width: 32px; border: 2px solid #fff; border-radius: 50%; cursor: pointer; transition: transform 0.2s;"
+                         onmouseover="this.style.transform='scale(1.1)'"
+                         onmouseout="this.style.transform='scale(1.0)'" />
+                </a>
+            </div>
+        </div>
+
+        <div class="vc-sidebar" id="vc-sidebar">
+            <!-- Logo centrado y pequeño -->
+            <div class="text-center mb-4" style="margin-top: 20px;">
+                <img src="~/images/image5.png" alt="Logo VetCenter"
+                     class="vc-logo" style="max-width: 120px; height: auto;" />
+
+            </div>
+
+            <!-- Menú en orden correcto y alineado -->
+            <nav class="nav flex-column" style="gap: 12px; margin-top: 10px;">
+                <a class="nav-link ps-1" href="/Panel/Index"><i class="fa-solid fa-house me-2"></i>Inicio</a>
+                <a class="nav-link ps-1" href="/Usuario/Index"><i class="fa-solid fa-user-gear me-2"></i>Usuarios</a>
+                <a class="nav-link ps-1" href="/Cita/Index"><i class="fa-solid fa-calendar-check me-2"></i>Citas</a>
+                <a class="nav-link ps-1" href="/Cliente/Index"><i class="fa-solid fa-users me-2"></i>Clientes</a>
+                <a class="nav-link ps-1" href="/Mascota/Index"><i class="fa-solid fa-cat me-2"></i>Mascotas</a>
+                <a class="nav-link ps-1" href="/Medicamento/Index"><i class="fa-solid fa-pills me-2"></i>Medicamentos</a>
+            </nav>
+
+            <!-- Cerrar sesión abajo -->
+            <div class="mt-auto pt-3 ps-1">
+                <a class="nav-link text-danger" href="/Cuenta/Logout">
+                    <i class="fa-solid fa-right-from-bracket me-2"></i>Cerrar sesión
+                </a>
+            </div>
+        </div>
+
+
+
+
+        <!-- Contenido principal -->
+        <div class="vc-content">
+            @RenderBody()
+        </div>
+    </div>
+
+    <!-- Script para colapsar el menú -->
+    <script>
+        const toggleBtn = document.getElementById('vc-toggle');
+        const sidebar = document.getElementById('vc-sidebar');
+        const container = document.getElementById('vc-container');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            container.classList.toggle('collapsed');
+        });
+    </script>
+    <script>
+        const toggleBtn = document.getElementById('vc-toggle');
+        const sidebar = document.getElementById('vc-sidebar');
+        const container = document.getElementById('vc-container');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            container.classList.toggle('collapsed');
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

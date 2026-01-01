@@ -1,0 +1,3 @@
+﻿@{
+    Layout = ViewContext.RouteData.Values["controller"]?.ToString() == "Panel" ? "_PanelLayout" : "_Layout";
+}

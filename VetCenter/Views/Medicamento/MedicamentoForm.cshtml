@@ -1,0 +1,70 @@
+﻿@model VetCenter.Models.Medicamento
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Nuevo Medicamento" : "Editar Medicamento";
+    Layout = "_PanelLayout";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">@ViewData["Title"]</h3>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Guardar" method="post">
+
+                @if (Model.Id != 0)
+                {
+                    <input type="hidden" asp-for="Id" />
+                }
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Nombre del Medicamento</label>
+                    <input asp-for="NombreDelMedicamento" class="form-control" placeholder="Ingrese el nombre del medicamento" />
+                    <span asp-validation-for="NombreDelMedicamento" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Descripción</label>
+                    <textarea asp-for="Descripcion" class="form-control" rows="3" placeholder="Ingrese una descripción"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Dosis Recomendada</label>
+                    <input asp-for="DosisRecomendada" class="form-control" placeholder="Ingrese la dosis recomendada" />
+                    <span asp-validation-for="DosisRecomendada" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Fecha de Vencimiento</label>
+                    <input asp-for="FechaDeVencimiento" type="date" class="form-control" />
+                    <span asp-validation-for="FechaDeVencimiento" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Stock</label>
+                    <input asp-for="Stock" class="form-control" placeholder="Ingrese el stock disponible" />
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fa-solid fa-arrow-left"></i> Regresar
+                    </a>
+
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="fa-solid fa-save"></i> Guardar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+

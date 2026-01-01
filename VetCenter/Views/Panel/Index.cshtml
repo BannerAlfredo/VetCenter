@@ -1,0 +1,222 @@
+﻿@model VetCenter.Models.PanelViewModel
+@{
+    ViewData["Title"] = "Panel Administrativo";
+    Layout = "_PanelLayout";
+}
+
+<div class="container-fluid bg-white">
+    <!-- Título alineado a la izquierda con línea -->
+    <h1 class="vc-panel-title">@ViewData["Title"]</h1>
+    <hr class="vc-divider" />
+
+    <!-- Tarjetas resumen en blanco, íconos y letras negras -->
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="vc-card w-100">
+                <i class="fa-solid fa-calendar-check vc-card-icon"></i>
+                <h5 class="vc-card-title">Citas</h5>
+                <p class="vc-card-value">@Model.Citas</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="vc-card w-100">
+                <i class="fa-solid fa-dog vc-card-icon"></i>
+                <h5 class="vc-card-title">Mascotas</h5>
+                <p class="vc-card-value">@Model.Mascotas</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="vc-card w-100">
+                <i class="fa-solid fa-user vc-card-icon"></i>
+                <h5 class="vc-card-title">Clientes</h5>
+                <p class="vc-card-value">@Model.Clientes</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="vc-card w-100">
+                <i class="fa-solid fa-pills vc-card-icon"></i>
+                <h5 class="vc-card-title">Medicamentos</h5>
+                <p class="vc-card-value">@Model.Medicamentos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0 text-dark">
+                      </i>Citas por día
+                    </h5>
+                </div>
+                <!-- 🔹 Aquí se agranda el gráfico -->
+                <div class="card-body" style="height: 450px;">
+                    <canvas id="citasChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0 text-dark">
+                     </i>Distribución de especies
+                    </h5>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center" style="height: 450px;">
+                    <canvas id="especiesChart" style="max-width: 100%; max-height: 100%;"></canvas>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos institucionales -->
+<style>
+    .vc-panel-title {
+        color: #2d498f;
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        text-align: left;
+    }
+
+    .vc-divider {
+        border-top: 3px solid #2d498f;
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .vc-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .vc-card-icon {
+        font-size: 24px; /* más pequeño */
+        color: #6c757d; /* color plomo */
+        margin-bottom: 10px;
+    }
+
+    .vc-card-title {
+        font-size: 20px;
+        color: #000000;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    .vc-card-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #000000;
+    }
+</style>
+
+<!-- Scripts para gráficos -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctxCitas = document.getElementById('citasChart');
+    new Chart(ctxCitas, {
+        type: 'bar',
+        data: {
+            labels: ['26/3/2025', '27/3/2025', '28/3/2025'],
+            datasets: [{
+                label: 'Citas por día',
+                data: [1.0, 1.0, 1.0],
+                backgroundColor: 'rgba(46, 204, 113, 0.18)', // verde transparente
+                 borderColor: '#2ecc71',                      // 🔹 borde verde más fuerte
+                borderWidth: 1,                              // 🔹 grosor del borde
+                borderRadius: 4,
+                barThickness: 120,                          // 🔹 mucho más gruesas
+                categoryPercentage: 0.6,
+                barPercentage: 1.0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+                padding: { top: 20, bottom: 20, left: 10, right: 10 }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        color: '#000000', // leyenda en negro
+                        font: {
+                            size: 14,
+                            weight: 'normal'
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#000000', // eje X en negro
+                        font: {
+                            size: 13,
+                            weight: 'normal'
+                        }
+                    },
+                    grid: { display: false }
+                },
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 1.0,
+                    ticks: {
+                        stepSize: 0.1,
+                        autoSkip: false,
+                        precision: 1,
+                        callback: function(value) {
+                            return value.toFixed(1);
+                        },
+                        color: '#000000', // eje Y en negro
+                        font: { size: 13, weight: 'normal' }
+                    },
+                    grid: { color: '#e0e0e0' }
+                }
+            }
+        }
+    });
+</script>
+
+
+
+<script>
+    const ctxEspecies = document.getElementById('especiesChart');
+    new Chart(ctxEspecies, {
+        type: 'pie',
+        data: {
+            labels: ['Perro', 'Gato', 'Conejo', 'Hamster', 'Pájaro'],
+            datasets: [{
+                data: [30, 25, 20, 15, 10],
+                backgroundColor: ['#e74c3c', '#3498db', '#f1c40f', '#2ecc71', '#9b59b6']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#000000',
+                        font: {
+                            size: 13,
+                            weight: 'normal'
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>

@@ -1,0 +1,338 @@
+﻿@model IEnumerable<VetCenter.Models.Usuario>
+@{
+    ViewData["Title"] = "Usuarios";
+    Layout = "_PanelLayout";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <div>
+            <h2 class="mb-0 fw-bold" style="color: #0d1b2a; font-size: 28px; margin-left: 32px;">Usuarios</h2>
+        </div>
+        <button type="button" class="btn btn-dark shadow-sm d-flex align-items-center gap-2" onclick="abrirModal(0)" style="background-color: #0d1b2a; border: none;">
+           </i> Agregar Usuario
+        </button>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa-solid fa-check-circle me-2"></i> @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
+            <thead>
+                <tr class="text-secondary fw-bold fs-7">
+                    <th class="py-3 ps-4 border-bottom text-center">
+                        ID
+                        <i class="fa-solid fa-arrow-up text-secondary"></i>
+                        <i class="fa-solid fa-arrow-down text-secondary"></i>
+                        <i class="fa-solid fa-arrow-down-up ms-1 small"></i>
+                    </th>
+                    <th class="py-3 border-bottom text-center">
+                        Nombre Usuario
+                        <i class="fa-solid fa-arrow-up text-secondary"></i>
+                        <i class="fa-solid fa-arrow-down text-secondary"></i>
+                        <i class="fa-solid fa-arrow-down-up ms-1 small"></i>
+                    </th>
+                    <th class="py-3 border-bottom text-center">
+                        Apellido
+                        <i class="fa-solid fa-arrow-up text-secondary"></i>
+                        <i class="fa-solid fa-arrow-down text-secondary"></i>
+                        <i class="fa-solid fa-arrow-down-up ms-1 small"></i>
+                    </th>
+                    <th class="py-3 border-bottom text-center">
+                        Email
+                        <i class="fa-solid fa-arrow-up text-secondary"></i>
+                        <i class="fa-solid fa-arrow-down text-secondary"></i>
+                        <i class="fa-solid fa-arrow-down-up ms-1 small"></i>
+                    </th>
+                    <th class="py-3 border-bottom text-center">
+                        Rol
+                        <i class="fa-solid fa-arrow-down-up ms-1 small"></i>
+                        <i class="fa-solid fa-arrow-up text-secondary"></i>
+                        <i class="fa-solid fa-arrow-down text-secondary"></i>
+                    </th>
+                    <th class="py-3 border-bottom text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="bg-white border-bottom">
+                        <td class="py-3 text-center text-dark">@item.Id</td>
+                        <td class="py-3 text-center text-dark">@item.Nombre</td>
+                        <td class="py-3 text-center text-dark">@item.Apellido</td>
+                        <td class="py-3 text-center text-dark">@item.Email</td>
+                        <td class="py-3 text-center text-dark">@item.Rol</td>
+                        <td class="text-center py-3">
+                            <div class="d-flex justify-content-center gap-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm rounded-2 shadow-sm"
+                                        onclick="abrirModal(@item.Id, '@item.Nombre', '@item.Apellido', '@item.Email', '@item.Rol')"
+                                        title="Editar" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+
+                                <a asp-action="Eliminar" asp-route-id="@item.Id"
+                                   class="btn btn-outline-danger btn-sm rounded-2 shadow-sm"
+                                   onclick="return confirm('¿Estás seguro de eliminar este usuario?');"
+                                   title="Eliminar" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (ViewBag.TotalPages != null && ViewBag.TotalPages > 0)
+    {
+        <div class="d-flex justify-content-center py-4">
+            <nav aria-label="Navegación de páginas">
+                <ul class="pagination mb-0">
+
+                    <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-pageNumber="1"
+                           asp-route-buscar="@ViewData["BusquedaActual"]">
+                            <i class="fa-solid fa-angles-left small"></i>
+                        </a>
+                    </li>
+
+                    <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
+                           asp-route-buscar="@ViewData["BusquedaActual"]">
+                            <i class="fa-solid fa-chevron-left small"></i>
+                        </a>
+                    </li>
+
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link" asp-action="Index"
+                               asp-route-pageNumber="@i"
+                               asp-route-buscar="@ViewData["BusquedaActual"]">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
+                           asp-route-buscar="@ViewData["BusquedaActual"]">
+                            <i class="fa-solid fa-chevron-right small"></i>
+                        </a>
+                    </li>
+
+                    <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-pageNumber="@ViewBag.TotalPages"
+                           asp-route-buscar="@ViewData["BusquedaActual"]">
+                            <i class="fa-solid fa-angles-right small"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="modalLabel">
+                    <i class="fa-solid fa-user me-2"></i> <span id="modalTitulo">Usuario</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form asp-action="Guardar" method="post" id="formUsuario">
+                    <input type="hidden" name="Id" id="usuarioId" value="0" />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-secondary">Nombre</label>
+                            <input type="text" name="Nombre" id="usuarioNombre" class="form-control shadow-sm" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-secondary">Apellido</label>
+                            <input type="text" name="Apellido" id="usuarioApellido" class="form-control shadow-sm" required />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Correo Electrónico</label>
+                        <input type="email" name="Email" id="usuarioEmail" class="form-control shadow-sm" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Contraseña</label>
+                        <div class="input-group shadow-sm">
+                            <input type="password" name="Password" id="usuarioPassword" class="form-control" placeholder="Dejar vacío para mantener la actual" />
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('usuarioPassword', 'iconPass1')">
+                                <i class="fa-solid fa-eye" id="iconPass1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" id="divConfirmarPass">
+                        <label class="form-label fw-bold text-secondary">Confirmar Contraseña</label>
+                        <div class="input-group shadow-sm">
+                            <input type="password" name="ConfirmarPassword" id="usuarioConfirmarPassword" class="form-control" placeholder="Repita la contraseña" />
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('usuarioConfirmarPassword', 'iconPass2')">
+                                <i class="fa-solid fa-eye" id="iconPass2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-4" id="divRol">
+                        <label class="form-label fw-bold text-secondary">Rol</label>
+                        <select name="Rol" id="usuarioRol" class="form-select shadow-sm">
+                            <option value="">-- Seleccione un Rol --</option>
+                            <option value="Admin">Administrador</option>
+                            <option value="Veterinario">Veterinario</option>
+                            <option value="Asistente">Asistente</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" name="Rol" id="usuarioRolHidden" disabled />
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-secondary shadow-sm" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary shadow-sm px-4">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function abrirModal(id, nombre = '', apellido = '', email = '', rol = '') {
+        const modal = new bootstrap.Modal(document.getElementById('modalUsuario'));
+
+        document.getElementById('usuarioId').value = id;
+        document.getElementById('usuarioNombre').value = nombre;
+        document.getElementById('usuarioApellido').value = apellido;
+        document.getElementById('usuarioEmail').value = email;
+        document.getElementById('usuarioPassword').value = '';
+        document.getElementById('usuarioConfirmarPassword').value = '';
+        document.getElementById('usuarioRol').value = rol;
+
+        const tituloLabel = document.getElementById('modalTitulo');
+        const divRol = document.getElementById('divRol');
+        const rolSelect = document.getElementById('usuarioRol');
+        const rolHidden = document.getElementById('usuarioRolHidden');
+
+        if (id === 0) {
+            tituloLabel.innerText = "Nuevo Usuario";
+            divRol.style.display = "block";
+            rolSelect.required = true;
+            rolSelect.disabled = false;
+            rolHidden.disabled = true;
+        } else {
+            tituloLabel.innerText = "Editar Usuario";
+            divRol.style.display = "none";
+            rolSelect.required = false;
+            rolSelect.disabled = true;
+            rolHidden.disabled = false;
+            rolHidden.value = rol;
+        }
+        modal.show();
+    }
+
+    function togglePassword(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var alertButtons = document.querySelectorAll('.alert .btn-close');
+        alertButtons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var alertBox = this.closest('.alert');
+                if (alertBox) {
+                    alertBox.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    /* Estilos base */
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .fs-7 {
+        font-size: 16px;
+    }
+
+    /* Paginado Verde (Estilo Clientes) */
+    .pagination {
+        align-items: center;
+        gap: 5px;
+    }
+
+    .page-link {
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #6c757d;
+        font-weight: 500;
+        background-color: transparent;
+        transition: all 0.2s;
+    }
+
+        .page-link:hover {
+            background-color: #e9ecef;
+            color: #000;
+            border-radius: 50%;
+        }
+
+        .page-link:focus {
+            box-shadow: none;
+        }
+
+    .page-item.active .page-link {
+        background-color: #d1e7dd;
+        color: #0f5132;
+        font-weight: bold;
+    }
+
+    .page-item.disabled .page-link {
+        color: #dee2e6;
+        background-color: transparent;
+    }
+
+    .small {
+        font-size: 16px;
+    }
+</style>

@@ -1,0 +1,78 @@
+﻿@model VetCenter.Models.Usuario
+
+@{
+
+    ViewData["Title"] = Model.Id == 0 ? "Nuevo Usuario" : "Editar Usuario";
+    Layout = "_PanelLayout";
+}
+
+<div class="container mt-4" style="max-width: 600px;">
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-header bg-primary text-white py-3 rounded-top-4">
+            <h5 class="mb-0 fw-bold">
+                <i class="fa-solid fa-user me-2"></i>@ViewData["Title"]
+            </h5>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Guardar" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label asp-for="Nombre" class="form-label fw-bold text-secondary">Nombre</label>
+                    <input asp-for="Nombre" class="form-control shadow-sm" placeholder="Ingrese nombre" />
+                    <span asp-validation-for="Nombre" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Apellido" class="form-label fw-bold text-secondary">Apellido</label>
+                    <input asp-for="Apellido" class="form-control shadow-sm" placeholder="Ingrese apellido" />
+                    <span asp-validation-for="Apellido" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label fw-bold text-secondary">Correo Electrónico</label>
+                    <input asp-for="Email" type="email" class="form-control shadow-sm" placeholder="nombre@ejemplo.com" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label fw-bold text-secondary">Contraseña</label>
+                    <input asp-for="Password" type="password" class="form-control shadow-sm"
+                           placeholder="@(Model.Id > 0 ? "Dejar vacío para mantener la actual" : "Ingrese contraseña")" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                @if (Model.Id == 0)
+                {
+                    <div class="mb-4">
+                        <label asp-for="Rol" class="form-label fw-bold text-secondary">Rol</label>
+                        <select asp-for="Rol" class="form-select shadow-sm">
+                            <option value="">-- Seleccione un Rol --</option>
+                            <option value="Admin">Administrador</option>
+                            <option value="Veterinario">Veterinario</option>
+                            <option value="Asistente">Asistente</option>
+                        </select>
+                        <span asp-validation-for="Rol" class="text-danger small"></span>
+                    </div>
+                }
+                else
+                {
+                    <input type="hidden" asp-for="Rol" />
+                }
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-secondary shadow-sm">Cancelar</a>
+                    <button type="submit" class="btn btn-primary shadow-sm px-4">
+                        <i class="fa-solid fa-save me-1"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,99 @@
+﻿@model VetCenter.Models.Usuario
+@{
+    ViewData["Title"] = "Configuración del perfil";
+    Layout = "_PanelLayout";
+}
+
+<div class="container-fluid px-4">
+
+    <div class="my-4 text-center">
+        <h2 class="fw-bold" style="color: #2d498f;">Configuración del perfil</h2>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa-solid fa-check-circle me-2"></i> @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm rounded-4 mx-auto" style="max-width: 900px;">
+        <div class="card-body p-5">
+
+            <form asp-action="ActualizarPerfil" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+
+                <h5 class="fw-bold text-secondary mb-3 border-bottom pb-2">Información Personal</h5>
+
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold small text-uppercase text-secondary">Nombre</label>
+                        <input type="text" name="Nombre" value="@Model.Nombre" class="form-control bg-light" placeholder="Ingrese su nombre" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold small text-uppercase text-secondary">Apellido</label>
+                        <input type="text" name="Apellido" value="@Model.Apellido" class="form-control bg-light" placeholder="Ingrese su apellido" required />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-bold small text-uppercase text-secondary">Correo Electrónico</label>
+                        <input type="email" name="Email" value="@Model.Email" class="form-control bg-light" placeholder="nombre@ejemplo.com" required />
+                    </div>
+                </div>
+
+                <h5 class="fw-bold text-secondary mb-3 border-bottom pb-2 mt-5">Cambiar Contraseña</h5>
+
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold small text-uppercase text-secondary">Nueva Contraseña</label>
+                        <div class="input-group">
+                            <input type="password" name="NuevaPassword" id="newPass" class="form-control bg-light" placeholder="Ingrese una nueva contraseña" />
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePass('newPass', 'icon1')">
+                                <i class="fa-solid fa-eye" id="icon1"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold small text-uppercase text-secondary">Confirmar Contraseña</label>
+                        <div class="input-group">
+                            <input type="password" name="ConfirmarPassword" id="confirmPass" class="form-control bg-light" placeholder="Confirme la contraseña" />
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePass('confirmPass', 'icon2')">
+                                <i class="fa-solid fa-eye" id="icon2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-5">
+                    <button type="submit" class="btn py-3 fw-bold shadow-sm" style="background-color: #0d1b2a; color: white;">
+                        GUARDAR CAMBIOS
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePass(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+</script>

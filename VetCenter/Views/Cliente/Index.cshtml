@@ -1,0 +1,212 @@
+﻿@model X.PagedList.IPagedList<VetCenter.Models.Cliente>
+@{
+    ViewData["Title"] = "Clientes";
+    Layout = "_PanelLayout";
+}
+
+<style>
+    .vc-pager {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 18px;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    }
+
+    .vc-pager-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        color: #000;
+        font-size: 15px;
+        text-decoration: none;
+    }
+
+        .vc-pager-btn:hover {
+            color: #000;
+        }
+
+        .vc-pager-btn.disabled,
+        .vc-pager-btn[aria-disabled="true"] {
+            color: #adb5bd;
+            pointer-events: none;
+        }
+
+    .vc-pager-current {
+        background-color: #d4edda;
+        color: #198754;
+        font-weight: 600;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        border-radius: 50%;
+        display: inline-block;
+        font-size: 16px;
+    }
+
+    .table td,
+    .table th {
+        padding-top: 18px;
+        padding-bottom: 18px;
+        line-height: 1.8;
+        vertical-align: middle;
+        text-align: center;
+        color: #000 !important;
+    }
+
+    .table-responsive {
+        margin-bottom: 0;
+    }
+
+    .vc-pager-container {
+        margin-top: 0;
+        background-color: #fff;
+        border-top: 1px solid #dee2e6;
+        position: relative;
+    }
+
+        .vc-pager-container::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 1px;
+            background: #dee2e6;
+        }
+</style>
+
+<div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+    <h2 class="mb-0 fw-bold" style="color: #0d1b2a; font-size: 28px; margin-left: 32px;">
+        Clientes
+    </h2>
+    <a asp-action="Nuevo" class="btn" style="background-color: #041c3e; color: #fff; margin-right: 32px;">
+        Agregar Cliente
+    </a>
+</div>
+
+<div class="card-body p-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-primary text-white" style="border-bottom: 1px solid #dee2e6;">
+                <tr>
+                    <th class="text-center fw-bold">
+                        ID
+                        <i class="fa-solid fa-arrow-up text-secondary" style="font-size:16px; margin-left:6px;"></i>
+                        <i class="fa-solid fa-arrow-down text-secondary" style="font-size:16px; margin-left:4px;"></i>
+                    </th>
+                    <th class="text-center fw-bold">
+                        Nombre
+                        <i class="fa-solid fa-arrow-up text-secondary" style="font-size:16px; margin-left:6px;"></i>
+                        <i class="fa-solid fa-arrow-down text-secondary" style="font-size:16px; margin-left:4px;"></i>
+                    </th>
+                    <th class="text-center fw-bold">
+                        Apellido
+                        <i class="fa-solid fa-arrow-up text-secondary" style="font-size:16px; margin-left:6px;"></i>
+                        <i class="fa-solid fa-arrow-down text-secondary" style="font-size:16px; margin-left:4px;"></i>
+                    </th>
+                    <th class="text-center fw-bold">
+                        Correo
+                        <i class="fa-solid fa-arrow-up text-secondary" style="font-size:16px; margin-left:6px;"></i>
+                        <i class="fa-solid fa-arrow-down text-secondary" style="font-size:16px; margin-left:4px;"></i>
+                    </th>
+                    <th class="text-center fw-bold">
+                        Teléfono
+                        <i class="fa-solid fa-arrow-up text-secondary" style="font-size:16px; margin-left:6px;"></i>
+                        <i class="fa-solid fa-arrow-down text-secondary" style="font-size:16px; margin-left:4px;"></i>
+                    </th>
+                    <th class="text-center fw-bold" style="width: 160px;">Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="ps-4">@item.Id</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.Apellido</td>
+                        <td>@item.Correo</td>
+                        <td>@item.Telefono</td>
+                        <td class="text-center">
+                            <a asp-action="Detalles" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary mx-1" title="Ver Detalle">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                            <a asp-action="Editar" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary mx-1" title="Editar">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <a asp-action="Eliminar" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger mx-1"
+                               onclick="return confirm('¿Eliminar cliente?')" title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- 🔽 Paginación institucional -->
+        <div class="vc-pager-container">
+            <nav class="vc-pager py-3">
+                @if (Model.PageNumber > 1)
+                {
+                    <a class="vc-pager-btn" asp-action="Index" asp-route-pageNumber="1">
+                        <i class="fa-solid fa-angles-left"></i>
+                    </a>
+                }
+                else
+                {
+                    <span class="vc-pager-btn disabled" aria-disabled="true">
+                        <i class="fa-solid fa-angles-left"></i>
+                    </span>
+                }
+
+                @if (Model.HasPreviousPage)
+                {
+                    <a class="vc-pager-btn" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </a>
+                }
+                else
+                {
+                    <span class="vc-pager-btn disabled" aria-disabled="true">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </span>
+                }
+
+                <span class="vc-pager-current">@Model.PageNumber</span>
+
+                @if (Model.HasNextPage)
+                {
+                    <a class="vc-pager-btn" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </a>
+                }
+                else
+                {
+                    <span class="vc-pager-btn disabled" aria-disabled="true">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </span>
+                }
+
+                @if (Model.PageNumber < Model.PageCount)
+                {
+                    <a class="vc-pager-btn" asp-action="Index" asp-route-pageNumber="@Model.PageCount">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </a>
+                }
+                else
+                {
+                    <span class="vc-pager-btn disabled" aria-disabled="true">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </span>
+                }
+            </nav>
+        </div>
+    </div>
+</div>
